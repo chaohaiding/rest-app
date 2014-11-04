@@ -19,13 +19,28 @@ var app = express();
 
 // This is where all the magic happens!
 app.engine('html', swig.renderFile);
-
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
-
+/*
 app.use(orm.express("mongodb://localhost/rest", {
     define: function(db,models,next){ 
         models.question=db.define('question');
+        next();
+    }
+}));*/
+
+//mysql db
+
+var question={ 
+            title     : String,
+            body      : String,
+            createdAt : Date,
+            createdBy : Object,
+        };
+        
+app.use(orm.express("mysql://root:123456@host/test",{
+define: function (db, models, next) {
+        models.question = db.define("question", question);
         next();
     }
 }));
