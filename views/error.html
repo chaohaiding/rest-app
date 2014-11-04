@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
-    <title>{{title}}</title>
-    <script type="text/javascript">
-    </script>
-  </head>
-  <body>
+{% extends 'layout.html' %}
+{% block title %} {{title}} {% endblock %}
+{% block head %}
+<script type="text/javascript"></script>
+{% endblock %}
+{% block content} 
     <h1>{{message}}</h1>
     <h2>{{error.status}}</h2>
     <pre>{{error.status}}</pre>
-  </body>
-</html>
+{% endblock %}

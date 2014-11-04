@@ -5,7 +5,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig=require('swig');//add swig module
+var orm=require('orm');//add orm module
+var mongodb=require('mongodb');
 var routes = require('./routes/index');
+var questions=require('./routes/question');
 var users = require('./routes/users');
 
 var app = express();
@@ -20,6 +23,12 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
+app.use(orm.express("mongodb://localhost/rest", {
+    define: function(db,models,next){ 
+        models.question=db.define('question');
+        next();
+    }
+}));
 
 
 app.use(favicon());
@@ -29,7 +38,10 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 app.use('/', routes);
+app.use('/question',questions);
 app.use('/users', users);
 
 /// catch 404 and forward to error handler
