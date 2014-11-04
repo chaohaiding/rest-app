@@ -18,7 +18,7 @@ var app = express();
 app.engine('html', swig.renderFile);
 
 app.set('view engine', 'html');
-app.set('views', __dirname + '/views/html');
+app.set('views', __dirname + '/views');
 
 
 
