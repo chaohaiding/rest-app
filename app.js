@@ -2,16 +2,20 @@ var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig=require('swig');//add swig module
-var orm=require('orm');//add orm module
-var mongodb=require('mongodb');
-var routes = require('./routes/index');
-var questions=require('./routes/question');
-var users = require('./routes/users');
+
+//var config=require('./config/config');
+var routes=require('./config/routes');
+var models=require('./app/models/');
+
+//var routes = require('./routes/index');
+//var questions=require('./routes/question');
+//var users = require('./routes/users');
 
 var app = express();
+
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
@@ -21,43 +25,36 @@ var app = express();
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
-/*
-app.use(orm.express("mongodb://localhost/rest", {
-    define: function(db,models,next){ 
-        models.question=db.define('question');
-        next();
-    }
-}));*/
-
-//mysql db
-
-var question={ 
-            title     : String,
-            body      : String,
-            createdAt : Date,
-            createdBy : Object,
-        };
-        
-app.use(orm.express("mysql://root:123456@host/test",{
-define: function (db, models, next) {
-        models.question = db.define("question", question);
-        next();
-    }
-}));
-
 
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(cookieParser());
+//app.use(express.methodOverrider());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(app.router);
+//config(app);
+
+app.use(function(req,res, next){
+    models(function(err,db){
+        if(err){
+            console.log(err);
+            return next(err);
+        }
+        req.models=db.models;
+        req.db=db;
+        return next();
+    });
+});
 
 
+routes(app);
+//app.use('/', routes);
+//app.use('/question',questions);
+//app.use('/users', users);
 
-app.use('/', routes);
-app.use('/question',questions);
-app.use('/users', users);
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -73,6 +70,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
+        //console.log(err);
         res.render('error', {
             message: err.message,
             error: err

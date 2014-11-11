@@ -6,5 +6,18 @@
 {% block content %} 
     <h1>{{title}}</h1>
     <p>Welcome to {{title}}</p>
+    <div>
+        {% for question in questions %}
+        <h2>
+            Title: {{ question.title}}
+        </h2>
+        <p>
+            Created Time: {{question.createdAt}}
+        </p>
+        <p>
+            Content: {{question.content}}
+        </p>
+        {% endfor %}
+    </div>
 {% endblock %}
 
