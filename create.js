@@ -8,7 +8,7 @@ models(function(err, db){
             if(err) throw err;
 
             db.models.question.create({
-                title:"Question Test 1", content:"This is a test question!"
+                title:"Question Test", content:"This is a test question!"
             }, function(err, question){
                 if(err) 
                 {
