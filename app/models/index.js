@@ -10,7 +10,7 @@ function setup(db,cb)
 
 module.exports=function(cb){
     if(connection) return cb(null, connection);
-    orm.connect(config.database, function(err, db)
+    orm.connect(config.database.protocol+'://'+config.database.database, function(err, db)
     {
         if(err) return cb(err);
         //console.log(db);
