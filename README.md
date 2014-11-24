@@ -12,6 +12,9 @@ npm install
 
 1. create a database in your local MySQL and the replace the db name in the config.js under config folder.
 
+## SQLite database setup
+
+1. The SQLite database is in the root path.
 
 ## RESTful API
 1. http.get /questions : get a list of questions
